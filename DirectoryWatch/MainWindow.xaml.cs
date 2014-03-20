@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -82,6 +83,12 @@ namespace DirectoryWatch
                 foreach (var v in _query)
                 {              
                     FileNotifications.Add(v);
+                    TaskbarIcon TI = (TaskbarIcon)FindResource("NotifyIcon");
+                    FancyBalloon balloon = new FancyBalloon();
+                    balloon.BalloonText = "Latest change";
+                    balloon.LatestNotify.Text = v.ValueInfo.Name;
+                    //show balloon and close it after 4 seconds
+                    TI.ShowCustomBalloon(balloon, PopupAnimation.Slide, 4000);
                 }
             }
         }
@@ -128,7 +135,7 @@ namespace DirectoryWatch
             {
                 return new DelegateCommand
                 {
-                    CanExecuteFunc = () => Application.Current.MainWindow == null,
+                    CanExecuteFunc = () => (Application.Current.MainWindow == null || Application.Current.MainWindow.IsVisible != true),
                     CommandAction = () =>
                     {
                         Application.Current.MainWindow = new MainWindow();

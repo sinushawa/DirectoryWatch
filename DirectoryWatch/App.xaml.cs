@@ -14,7 +14,7 @@ namespace DirectoryWatch
     /// </summary>
     public partial class App : Application
     {
-        private TaskbarIcon notifyIcon;
+        public TaskbarIcon notifyIcon;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -26,6 +26,7 @@ namespace DirectoryWatch
 
         protected override void OnExit(ExitEventArgs e)
         {
+            notifyIcon.Visibility = Visibility.Collapsed;
             notifyIcon.Dispose(); //the icon would clean up automatically, but this is cleaner
             base.OnExit(e);
         }

@@ -58,6 +58,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="FancyBalloon.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -67,6 +71,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ComparableDictionary.cs" />
+    <Compile Include="FancyBalloon.xaml.cs" />
     <Compile Include="SortableObservableCollection.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -113,6 +118,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="page.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Close.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
