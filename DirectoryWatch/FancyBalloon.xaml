@@ -3,8 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:tb="http://www.hardcodet.net/taskbar"
              x:Name="me"
-             Height="120"
-             Width="240">
+             Height="80"
+             Width="200">
     <UserControl.Resources>
         <Storyboard x:Key="FadeIn">
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
@@ -93,9 +93,9 @@
             </Border.Effect>
         </Border>
         <Grid Width="160" Height="40" MouseDown="onLatestNotifyClick">
-            <TextBlock x:Name="LatestNotify" HorizontalAlignment="Stretch" />
+            <TextBlock x:Name="LatestNotify" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" FontSize="14" />
         </Grid>
-        <TextBlock Margin="72,10,10,0" VerticalAlignment="Top" Height="23.2" Text="{Binding Path=BalloonText, ElementName=me, Mode=Default}" TextWrapping="Wrap" Foreground="#FFECAD25" FontWeight="Bold" />
+        <TextBlock Margin="32,10,10,0" VerticalAlignment="Top" Height="23.2" Text="{Binding Path=BalloonText, ElementName=me, Mode=Default}" TextWrapping="Wrap" Foreground="#FFECAD25" FontWeight="Bold" />
         <Image HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="16" Height="16" Source="Close.png" Stretch="Fill" Opacity="0.4" ToolTip="Close Balloon" x:Name="imgClose" MouseDown="imgClose_MouseDown" />
     </Grid>
 </UserControl>

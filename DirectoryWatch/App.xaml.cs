@@ -15,11 +15,19 @@ namespace DirectoryWatch
     public partial class App : Application
     {
         public TaskbarIcon notifyIcon;
+        private WatchHolder _watchHolder;
+        public WatchHolder watchHolder
+        {
+            get
+            {
+                return _watchHolder;
+            }
+        }
 
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
-
+            _watchHolder = new WatchHolder();
             //create the notifyicon (it's a resource declared in NotifyIconResources.xaml
             notifyIcon = (TaskbarIcon)FindResource("NotifyIcon");
         }

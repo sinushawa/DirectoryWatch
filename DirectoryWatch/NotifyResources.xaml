@@ -12,7 +12,7 @@
 
     <tb:TaskbarIcon x:Key="NotifyIcon" DoubleClickCommand="{Binding ShowWindowCommand}" ContextMenu="{StaticResource SysTrayMenu}" IconSource="page.ico">
         <tb:TaskbarIcon.DataContext>
-            <local:MainWindow />
+            <Binding Path="watchHolder" Source="{x:Static Application.Current}" />
         </tb:TaskbarIcon.DataContext>
     </tb:TaskbarIcon>
 

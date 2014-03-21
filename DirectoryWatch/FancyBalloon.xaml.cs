@@ -106,7 +106,8 @@ namespace DirectoryWatch
 
         private void onLatestNotifyClick(object sender, MouseButtonEventArgs e)
         {
-            string _path = ((MainWindow)Application.Current.MainWindow).FileNotifications.Last().ValueInfo.FullName;
+            WatchHolder watchHolder = ((App)Application.Current).watchHolder;
+            string _path = watchHolder.FileNotifications.Last().ValueInfo.FullName;
             string argument = @"/select, " + _path;
             System.Diagnostics.Process.Start("explorer.exe", argument);
         }
