@@ -1,0 +1,26 @@
+---
+            filters:
+                images:
+                    - jpg
+                    - png
+                    - tif
+                    - psd
+                    - gif
+                pdf:
+                    - pdf
+                    - ai
+                indesign:
+                    - indd
+                powerpoint:
+                    - ppt
+                    - pptx
+                text:
+                    - doc
+                    - docx
+                    - txt
+                drawings:
+                    - dwg
+                    - rvt
+
+            frequency: 5
+...

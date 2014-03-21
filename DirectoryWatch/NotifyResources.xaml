@@ -4,6 +4,7 @@
                     xmlns:local="clr-namespace:DirectoryWatch">
     
     <ContextMenu x:Shared="false" x:Key="SysTrayMenu">
+        <MenuItem Header="Start Watching" Command="{Binding StartWatchingCommand}" />
         <MenuItem Header="Show Window" Command="{Binding ShowWindowCommand}" />
         <MenuItem Header="Hide Window" Command="{Binding HideWindowCommand}" />
         <Separator />

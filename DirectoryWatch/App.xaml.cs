@@ -34,6 +34,7 @@ namespace DirectoryWatch
 
         protected override void OnExit(ExitEventArgs e)
         {
+            notifyIcon.Icon.Dispose();
             notifyIcon.Visibility = Visibility.Collapsed;
             notifyIcon.Dispose(); //the icon would clean up automatically, but this is cleaner
             base.OnExit(e);

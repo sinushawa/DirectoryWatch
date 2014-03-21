@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>YamlSerializer</id>
+    <version>1.0</version>
+    <title>YamlSerializer</title>
+    <authors>Anthony S. Kilhoffer</authors>
+    <owners>Anthony S. Kilhoffer</owners>
+    <licenseUrl>http://yamlserializer.codeplex.com/license</licenseUrl>
+    <projectUrl>http://yamlserializer.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>YamlSerializer can serialize / deserialize most of native C# objects, i.e. primitive types (bool, char, int,...), enums, built-in non-primitive types (string, decimal), structures, classes and arrays of these types.</description>
+    <summary>Serializer/Deserializer for the YAML format.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+  </metadata>
+</package>
