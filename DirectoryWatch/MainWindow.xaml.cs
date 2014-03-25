@@ -52,7 +52,7 @@ namespace DirectoryWatch
             {
                 pathBox.Text = dialog.SelectedPath;
             }
-            watchHolder.Path = pathBox.Text;
+            watchHolder.PathFolder = pathBox.Text;
         }
 
         private void onClickOpenElem(object sender, MouseButtonEventArgs e)
@@ -68,6 +68,15 @@ namespace DirectoryWatch
             Border ctrl = (Border)sender;
             ValueDifference<FileInfo> fi = (ValueDifference<FileInfo>)ctrl.DataContext;
             watchHolder.FileNotifications.Remove(fi);
+        }
+
+        private void onFilterChecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox ctrl = (CheckBox)sender;
+        }
+        private void onFilterUnchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox ctrl = (CheckBox)sender;
         }
     }
 

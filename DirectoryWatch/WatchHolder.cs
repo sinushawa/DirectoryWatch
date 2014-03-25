@@ -23,7 +23,7 @@ namespace DirectoryWatch
     public class WatchHolder : FrameworkElement
     {
         # region FileNotifications dependency definition
-        public static readonly DependencyProperty FileNotificationsProperty = DependencyProperty.Register("FileNotifications", typeof(SortableObservableCollection<ValueDifference<FileInfo>>), typeof(MainWindow), new FrameworkPropertyMetadata(default(SortableObservableCollection<ValueDifference<FileInfo>>), new PropertyChangedCallback(onCollectionChanged)));
+        public static readonly DependencyProperty FileNotificationsProperty = DependencyProperty.Register("FileNotifications", typeof(SortableObservableCollection<ValueDifference<FileInfo>>), typeof(MainWindow), new FrameworkPropertyMetadata(default(SortableObservableCollection<ValueDifference<FileInfo>>), new PropertyChangedCallback(onFileNotificationsChanged)));
         public SortableObservableCollection<ValueDifference<FileInfo>> FileNotifications
         {
             get
@@ -35,20 +35,44 @@ namespace DirectoryWatch
                 SetValue(FileNotificationsProperty, value);
             }
         }
-        private static void onCollectionChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        private static void onFileNotificationsChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+        }
+        # endregion
+        # region PathFolder dependency definition
+        public static readonly DependencyProperty PathFolderProperty = DependencyProperty.Register("PathFolder", typeof(string), typeof(MainWindow), new FrameworkPropertyMetadata(default(string)));
+        public string PathFolder
+        {
+            get
+            {
+                return (string)GetValue(PathFolderProperty);
+            }
+            set
+            {
+                SetValue(PathFolderProperty, value);
+            }
+        }
+        # endregion
+        # region filters dependency definition
+        public static readonly DependencyProperty filtersProperty = DependencyProperty.Register("Filters", typeof(SortableObservableCollection<FileTypeFilter>), typeof(MainWindow), new FrameworkPropertyMetadata(default(SortableObservableCollection<FileTypeFilter>), new PropertyChangedCallback(onFiltersChanged)));
+        public SortableObservableCollection<FileTypeFilter> Filters
+        {
+            get
+            {
+                return (SortableObservableCollection<FileTypeFilter>)GetValue(filtersProperty);
+            }
+            set
+            {
+                SetValue(filtersProperty, value);
+            }
+        }
+        private static void onFiltersChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
         {
         }
         # endregion
         public DispatcherTimer dispatcherTimer;
-        public List<FileTypeFilter> filters;
         public List<YamlNode> settings;
         private bool isWatching = false;
-        private string _path;
-        public string Path
-        {
-            get { return _path; }
-            set { _path = value; }
-        }
         public Dictionary<string, FileInfo> lastQuery;
 
         public WatchHolder()
@@ -66,7 +90,7 @@ namespace DirectoryWatch
                 List<YamlNode> _path = YamlNode.FromYamlFile("watch_list.yml").ToList();
                 YamlMapping mapping = (YamlMapping)_path[0];
                 YamlScalar filtersMapping = mapping.First(x => ((YamlScalar)x.Key).Value == "watched").Value as YamlScalar;
-                Path = filtersMapping.Value;
+                PathFolder = filtersMapping.Value;
             }
             else
             {
@@ -79,7 +103,7 @@ namespace DirectoryWatch
             bool result = true;
             try
             {
-                filters = new List<FileTypeFilter>();
+                Filters = new SortableObservableCollection<FileTypeFilter>();
                 if (File.Exists("settings.yml"))
                 {
 
@@ -91,7 +115,7 @@ namespace DirectoryWatch
                         YamlScalar _keyNode = _filter.Key as YamlScalar;
                         YamlSequence _valueNode = _filter.Value as YamlSequence;
                         List<string> extensions = _valueNode.Select(x => ("."+((YamlScalar)x).Value)).ToList();
-                        filters.Add(new FileTypeFilter(_keyNode.Value, true, extensions));
+                        Filters.Add(new FileTypeFilter(_keyNode.Value, true, extensions));
                     }
                 }
                 else
@@ -109,15 +133,15 @@ namespace DirectoryWatch
 
         public void StartWatching()
         {
-            bool _dirExists = Directory.Exists(_path);
+            bool _dirExists = Directory.Exists(PathFolder);
             if (isWatching)
             {
                 StopWatching();
             }
             if (_dirExists)
             {
-                DirectoryInfo dInfo = new DirectoryInfo(_path);
-                lastQuery = dInfo.GetFilesByExtensions(filters.SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName);
+                DirectoryInfo dInfo = new DirectoryInfo(PathFolder);
+                lastQuery = dInfo.GetFilesByExtensions(Filters.Where(x=> x.IsEnabled).SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName);
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
                 dispatcherTimer.Start();
@@ -136,7 +160,7 @@ namespace DirectoryWatch
         }
         private async void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            bool _dirExists = Directory.Exists(_path);
+            bool _dirExists = Directory.Exists(PathFolder);
             if (_dirExists)
             {
                 List<ValueDifference<FileInfo>> _query = await TaskOfTResult_MethodAsync();
@@ -155,9 +179,9 @@ namespace DirectoryWatch
 
         async Task<List<ValueDifference<FileInfo>>> TaskOfTResult_MethodAsync()
         {
-            DirectoryInfo dInfo = new DirectoryInfo(_path);
+            DirectoryInfo dInfo = new DirectoryInfo(PathFolder);
             List<ValueDifference<FileInfo>> diff = new List<ValueDifference<FileInfo>>();
-            Dictionary<string, FileInfo> fileList = dInfo.GetFilesByExtensions(filters.SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName);
+            Dictionary<string, FileInfo> fileList = dInfo.GetFilesByExtensions(Filters.Where(x => x.IsEnabled).SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName);
             FileCompare _fileComparer = new FileCompare();
             diff = fileList.CompareDictionary<string, FileInfo>(lastQuery, _fileComparer);
             lastQuery = fileList;
@@ -169,7 +193,7 @@ namespace DirectoryWatch
             {
                 return new DelegateCommand
                 {
-                    CanExecuteFunc = () => (Path != null && Path != ""),
+                    CanExecuteFunc = () => (PathFolder != null && PathFolder != ""),
                     CommandAction = () =>
                     {
                         StartWatching();

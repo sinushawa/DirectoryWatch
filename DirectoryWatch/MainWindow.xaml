@@ -8,16 +8,30 @@
         <Grid.DataContext>
             <Binding Path="watchHolder" Source="{x:Static Application.Current}" />
         </Grid.DataContext>
-        <Grid HorizontalAlignment="Stretch" Height="24" Margin="10,10,10,0" VerticalAlignment="Top" Grid.Column="2">
+        <Grid HorizontalAlignment="Stretch" Height="24" Margin="10,10,10,0" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.9*" />
                 <ColumnDefinition Width="0.1*" />
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="pathBox" Grid.Column="0" Margin="0" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch"/>
+            <TextBox x:Name="pathBox" Text="{Binding Path=PathFolder}" Grid.Column="0" Margin="0" TextWrapping="Wrap" VerticalAlignment="Stretch"/>
             <Button Content="..." Grid.Column="1" HorizontalAlignment="Stretch" Margin="10,0,0,0" VerticalAlignment="Stretch" Click="onClickDirSelect"/>
         </Grid>
-        
-        <Grid HorizontalAlignment="Stretch" Height="22" Margin="10,45,10,0" VerticalAlignment="Top" Grid.Column="3">
+        <ListView ScrollViewer.VerticalScrollBarVisibility="Disabled" Height="45" Margin="10,40,10,0"  VerticalAlignment="Top" BorderBrush="{x:Null}" ItemsSource="{Binding Path=Filters}">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Height="45" Orientation="Vertical" Margin="5,0,5,0">
+                        <Label Content="{Binding Path=Name}" VerticalAlignment="Top" Padding="-5,0,0,0"/>
+                        <CheckBox IsChecked="{Binding Path=IsEnabled, Mode=TwoWay}" Checked="onFilterChecked" Unchecked="onFilterUnchecked" />
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <Grid HorizontalAlignment="Stretch" Height="22" Margin="10,95,10,0" VerticalAlignment="Top" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.3*" />
                 <ColumnDefinition Width="0.3*" />
@@ -27,7 +41,7 @@
             <Button Content="Stop" Grid.Column="1" Margin="6,0,6,0" HorizontalAlignment="Stretch"  VerticalAlignment="Top" Click="onClickStopWatch" />
             <Button Content="Clear" Grid.Column="2" Margin="6,0,0,0" HorizontalAlignment="Stretch"  VerticalAlignment="Top" Click="onClickClearWatch" />
         </Grid>
-        <Border BorderBrush="#FF959595" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,75,10,10" >
+        <Border BorderBrush="#FF959595" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,125,10,10" >
             <ListView HorizontalContentAlignment="Stretch" ItemsSource="{Binding Path=FileNotifications}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
