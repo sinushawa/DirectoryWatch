@@ -1,5 +1,9 @@
 ---
             filters:
+                3d:
+                    - max
+                    - skp
+                    - 3dm
                 images:
                     - jpg
                     - png
