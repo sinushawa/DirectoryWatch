@@ -76,7 +76,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ComparableDictionary.cs" />
+    <Compile Include="ValueDifference.cs" />
     <Compile Include="FancyBalloon.xaml.cs" />
     <Compile Include="SortableObservableCollection.cs" />
     <Compile Include="MainWindow.xaml.cs">
@@ -133,6 +133,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Close.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="page_add.png" />
+    <Resource Include="page_process.ico" />
+    <Resource Include="page_remove.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="page_edit.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

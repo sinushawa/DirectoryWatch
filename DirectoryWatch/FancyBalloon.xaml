@@ -3,8 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:tb="http://www.hardcodet.net/taskbar"
              x:Name="me"
-             Height="80"
-             Width="200">
+             Height="70"
+             HorizontalContentAlignment="Stretch">
+    
     <UserControl.Resources>
         <Storyboard x:Key="FadeIn">
             <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
@@ -87,15 +88,20 @@
         </EventTrigger>
     </UserControl.Triggers>
     <Grid x:Name="grid" MouseEnter="grid_MouseEnter">
-        <Border HorizontalAlignment="Stretch" Margin="5,5,5,5" BorderThickness="1,1,1,1" BorderBrush="#FF2C2C2C" CornerRadius="8" Background="#FFE6E6E6">
+        <Border Width="Auto" HorizontalAlignment="Stretch" BorderThickness="1,1,1,1" BorderBrush="#FF2C2C2C" CornerRadius="8" Background="#FFE6E6E6">
             <Border.Effect>
                 <DropShadowEffect Color="#FF747474" />
             </Border.Effect>
+                <Grid Width="Auto" Margin="10" Height="40" MouseDown="onLatestNotifyClick">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="40" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
+                    <Image Grid.Column="0" x:Name="latestType" Height="40" Width="40" />
+                    <TextBlock Grid.Column="1" x:Name="LatestNotify" Margin="10,0,30,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" FontSize="14" />
+                <Image Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="16" Height="16" Source="Close.png" Stretch="Fill" Opacity="0.8" ToolTip="Close Balloon" x:Name="imgClose" MouseDown="imgClose_MouseDown" />
+                </Grid>
         </Border>
-        <Grid Width="160" Height="40" MouseDown="onLatestNotifyClick">
-            <TextBlock x:Name="LatestNotify" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" FontSize="14" />
-        </Grid>
-        <TextBlock Margin="32,10,10,0" VerticalAlignment="Top" Height="23.2" Text="{Binding Path=BalloonText, ElementName=me, Mode=Default}" TextWrapping="Wrap" Foreground="#FFECAD25" FontWeight="Bold" />
-        <Image HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Width="16" Height="16" Source="Close.png" Stretch="Fill" Opacity="0.4" ToolTip="Close Balloon" x:Name="imgClose" MouseDown="imgClose_MouseDown" />
     </Grid>
 </UserControl>

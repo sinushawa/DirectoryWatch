@@ -11,7 +11,7 @@
         <MenuItem Header="Exit" Command="{Binding ExitApplicationCommand}" />
     </ContextMenu>
 
-    <tb:TaskbarIcon x:Key="NotifyIcon" DoubleClickCommand="{Binding ShowWindowCommand}" ContextMenu="{StaticResource SysTrayMenu}" IconSource="page.ico">
+    <tb:TaskbarIcon x:Key="NotifyIcon" DoubleClickCommand="{Binding ShowWindowCommand}" ContextMenu="{StaticResource SysTrayMenu}" IconSource="page_process.ico">
         <tb:TaskbarIcon.DataContext>
             <Binding Path="watchHolder" Source="{x:Static Application.Current}" />
         </tb:TaskbarIcon.DataContext>

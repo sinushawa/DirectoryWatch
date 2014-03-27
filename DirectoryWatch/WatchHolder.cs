@@ -72,6 +72,7 @@ namespace DirectoryWatch
         # endregion
         public DispatcherTimer dispatcherTimer;
         public List<YamlNode> settings;
+        public Dictionary<FileState,BitmapImage> icons;
         private bool isWatching = false;
         public Dictionary<string, FileInfo> lastQuery;
 
@@ -79,6 +80,7 @@ namespace DirectoryWatch
         {
             bool pathLoaded = InitPath();
             bool settingsLoaded = InitSettings();
+            InitImage();
             dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             FileNotifications = new SortableObservableCollection<ValueDifference<FileInfo>>();
         }
@@ -97,6 +99,25 @@ namespace DirectoryWatch
                 result = false;
             }
             return result;
+        }
+        public void InitImage()
+        {
+            icons = new Dictionary<FileState, BitmapImage>();
+            BitmapImage newFile = new BitmapImage();
+            newFile.BeginInit();
+            newFile.UriSource = new Uri("pack://application:,,,/DirectoryWatch;component/page_add.png");
+            newFile.EndInit();
+            icons.Add(FileState.IsNew,newFile);
+            BitmapImage delFile = new BitmapImage();
+            delFile.BeginInit();
+            delFile.UriSource = new Uri("pack://application:,,,/DirectoryWatch;component/page_remove.png");
+            delFile.EndInit();
+            icons.Add(FileState.IsDeleted, delFile);
+            BitmapImage modFile = new BitmapImage();
+            modFile.BeginInit();
+            modFile.UriSource = new Uri("pack://application:,,,/DirectoryWatch;component/page_edit.png");
+            modFile.EndInit();
+            icons.Add(FileState.IsModified, modFile);
         }
         public bool InitSettings()
         {
@@ -180,7 +201,7 @@ namespace DirectoryWatch
                     FileNotifications.Add(v);
                     TaskbarIcon TI = (TaskbarIcon)FindResource("NotifyIcon");
                     FancyBalloon balloon = new FancyBalloon();
-                    balloon.BalloonText = "Latest change";
+                    balloon.latestType.Source = icons[v.State];
                     balloon.LatestNotify.Text = v.ValueInfo.Name;
                     //show balloon and close it after 20 seconds
                     TI.ShowCustomBalloon(balloon, PopupAnimation.Slide, 20000);

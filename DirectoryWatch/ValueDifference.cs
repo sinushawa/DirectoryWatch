@@ -7,30 +7,25 @@ using System.IO;
 
 namespace DirectoryWatch
 {
+    public enum FileState
+    {
+        IsNew,
+        IsDeleted,
+        IsModified
+    }
+
     public class ValueDifference<T>
     {
-        public bool isNew;
-        public bool IsNew
+        public FileState state;
+        public FileState State
         {
             get
             {
-                return isNew;
+                return state;
             }
             set
             {
-                isNew = (bool)value;
-            }
-        }
-        public bool isDeleted;
-        public bool IsDeleted
-        {
-            get
-            {
-                return isDeleted;
-            }
-            set
-            {
-                isDeleted = (bool)value;
+                state = (FileState)value;
             }
         }
         public T valueInfo;
@@ -49,8 +44,18 @@ namespace DirectoryWatch
 
         public ValueDifference(bool _isNew, bool _isDeleted, T _valueInfo)
         {
-            isNew = _isNew;
-            isDeleted = _isDeleted;
+            if (_isNew)
+            {
+                State = FileState.IsNew;
+            }
+            if (_isDeleted)
+            {
+                State = FileState.IsDeleted;
+            }
+            if (!_isNew && !_isDeleted)
+            {
+                State = FileState.IsModified;
+            }
             valueInfo = _valueInfo;
         }
     }
