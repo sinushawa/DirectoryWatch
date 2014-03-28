@@ -62,6 +62,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="DirectoryInfoExtensions.cs" />
+    <Compile Include="FileInfoHolder.cs" />
+    <Compile Include="FileInfoHolderComparer.cs" />
     <Compile Include="FileTypeFilter.cs" />
     <Compile Include="WatchHolder.cs" />
     <Page Include="FancyBalloon.xaml">

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DirectoryWatch
 {
+    [Serializable]
     public class FileTypeFilter
     {
         private string name;

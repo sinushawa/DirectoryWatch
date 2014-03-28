@@ -17,18 +17,19 @@ using Hardcodet.Wpf.TaskbarNotification;
 using System.IO;
 using System.Diagnostics;
 using System.Yaml;
+using System.Yaml.Serialization;
 
 namespace DirectoryWatch
 {
     public class WatchHolder : FrameworkElement
     {
         # region FileNotifications dependency definition
-        public static readonly DependencyProperty FileNotificationsProperty = DependencyProperty.Register("FileNotifications", typeof(SortableObservableCollection<ValueDifference<FileInfo>>), typeof(MainWindow), new FrameworkPropertyMetadata(default(SortableObservableCollection<ValueDifference<FileInfo>>), new PropertyChangedCallback(onFileNotificationsChanged)));
-        public SortableObservableCollection<ValueDifference<FileInfo>> FileNotifications
+        public static readonly DependencyProperty FileNotificationsProperty = DependencyProperty.Register("FileNotifications", typeof(SortableObservableCollection<ValueDifference<FileInfoHolder>>), typeof(MainWindow), new FrameworkPropertyMetadata(default(SortableObservableCollection<ValueDifference<FileInfoHolder>>), new PropertyChangedCallback(onFileNotificationsChanged)));
+        public SortableObservableCollection<ValueDifference<FileInfoHolder>> FileNotifications
         {
             get
             {
-                return (SortableObservableCollection<ValueDifference<FileInfo>>)GetValue(FileNotificationsProperty);
+                return (SortableObservableCollection<ValueDifference<FileInfoHolder>>)GetValue(FileNotificationsProperty);
             }
             set
             {
@@ -74,7 +75,7 @@ namespace DirectoryWatch
         public List<YamlNode> settings;
         public Dictionary<FileState,BitmapImage> icons;
         private bool isWatching = false;
-        public Dictionary<string, FileInfo> lastQuery;
+        public Dictionary<string, FileInfoHolder> lastQuery;
 
         public WatchHolder()
         {
@@ -82,7 +83,7 @@ namespace DirectoryWatch
             bool settingsLoaded = InitSettings();
             InitImage();
             dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            FileNotifications = new SortableObservableCollection<ValueDifference<FileInfo>>();
+            FileNotifications = new SortableObservableCollection<ValueDifference<FileInfoHolder>>();
         }
         public bool InitPath()
         {
@@ -162,7 +163,7 @@ namespace DirectoryWatch
             if (_dirExists)
             {
                 DirectoryInfo dInfo = new DirectoryInfo(PathFolder);
-                lastQuery = dInfo.GetFilesByExtensions(Filters.Where(x=> x.IsEnabled).SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName);
+                lastQuery = dInfo.GetFilesByExtensions(Filters.Where(x=> x.IsEnabled).SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName, y=> y.ToFileInfoHolder());
                 dispatcherTimer.Tick += new EventHandler(dispatcherTimer_Tick);
                 dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
                 dispatcherTimer.Start();
@@ -190,12 +191,17 @@ namespace DirectoryWatch
                 _path[0].ToYamlFile("watch_list.yml");
             }
         }
+        public void SaveFilesInfo()
+        {
+            YamlSerializer serializer = new YamlSerializer();
+            serializer.SerializeToFile("query.yml", lastQuery);
+        }
         private async void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             bool _dirExists = Directory.Exists(PathFolder);
             if (_dirExists)
             {
-                List<ValueDifference<FileInfo>> _query = await TaskOfTResult_MethodAsync();
+                List<ValueDifference<FileInfoHolder>> _query = await TaskOfTResult_MethodAsync();
                 foreach (var v in _query)
                 {
                     FileNotifications.Add(v);
@@ -209,13 +215,13 @@ namespace DirectoryWatch
             }
         }
 
-        async Task<List<ValueDifference<FileInfo>>> TaskOfTResult_MethodAsync()
+        async Task<List<ValueDifference<FileInfoHolder>>> TaskOfTResult_MethodAsync()
         {
             DirectoryInfo dInfo = new DirectoryInfo(PathFolder);
-            List<ValueDifference<FileInfo>> diff = new List<ValueDifference<FileInfo>>();
-            Dictionary<string, FileInfo> fileList = dInfo.GetFilesByExtensions(Filters.Where(x => x.IsEnabled).SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName);
+            List<ValueDifference<FileInfoHolder>> diff = new List<ValueDifference<FileInfoHolder>>();
+            Dictionary<string, FileInfoHolder> fileList = dInfo.GetFilesByExtensions(Filters.Where(x => x.IsEnabled).SelectMany(x => x.Extensions).ToArray()).ToDictionary(x => x.FullName, y=> y.ToFileInfoHolder());
             FileCompare _fileComparer = new FileCompare();
-            diff = fileList.CompareDictionary<string, FileInfo>(lastQuery, _fileComparer);
+            diff = fileList.CompareDictionary<string, FileInfoHolder>(lastQuery, _fileComparer);
             lastQuery = fileList;
             return diff;
         }
@@ -276,6 +282,7 @@ namespace DirectoryWatch
                 {
                     CommandAction = () =>
                     {
+                        SaveFilesInfo();
                         SavePath();
                         Application.Current.Shutdown();
                     }

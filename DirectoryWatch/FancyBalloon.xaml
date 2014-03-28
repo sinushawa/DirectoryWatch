@@ -100,7 +100,7 @@
                     </Grid.ColumnDefinitions>
                     <Image Grid.Column="0" x:Name="latestType" Height="40" Width="40" />
                     <TextBlock Grid.Column="1" x:Name="LatestNotify" Margin="10,0,30,0" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextAlignment="Center" FontWeight="Bold" FontSize="14" />
-                <Image Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="16" Height="16" Source="Close.png" Stretch="Fill" Opacity="0.8" ToolTip="Close Balloon" x:Name="imgClose" MouseDown="imgClose_MouseDown" />
+                <Image Grid.Column="2" HorizontalAlignment="Right" VerticalAlignment="Top" Width="16" Height="16" Source="Close.png" Stretch="Fill" Opacity="0.8" ToolTip="Close Notification" x:Name="imgClose" MouseDown="imgClose_MouseDown" />
                 </Grid>
         </Border>
     </Grid>
