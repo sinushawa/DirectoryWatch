@@ -79,28 +79,13 @@ namespace DirectoryWatch
 
         public WatchHolder()
         {
-            bool pathLoaded = InitPath();
             bool settingsLoaded = InitSettings();
             InitImage();
+            InitWatch();
             dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             FileNotifications = new SortableObservableCollection<ValueDifference<FileInfoHolder>>();
         }
-        public bool InitPath()
-        {
-            bool result = true;
-            if (File.Exists("watch_list.yml"))
-            {
-                List<YamlNode> _path = YamlNode.FromYamlFile("watch_list.yml").ToList();
-                YamlMapping mapping = (YamlMapping)_path[0];
-                YamlScalar filtersMapping = mapping.First(x => ((YamlScalar)x.Key).Value == "watched").Value as YamlScalar;
-                PathFolder = filtersMapping.Value;
-            }
-            else
-            {
-                result = false;
-            }
-            return result;
-        }
+        
         public void InitImage()
         {
             icons = new Dictionary<FileState, BitmapImage>();
@@ -152,7 +137,16 @@ namespace DirectoryWatch
             }
             return result;
         }
-
+        public void InitWatch()
+        {
+            if (File.Exists("watch_list.yml"))
+            {
+                YamlSerializer serializer = new YamlSerializer();
+                WatchSave watchSave = (WatchSave)(serializer.DeserializeFromFile("watch_list.yml", new Type[] { (typeof(WatchSave)) })[0]);
+                PathFolder = watchSave.watchedFolder;
+                Filters = watchSave.filters;
+            }
+        }
         public void StartWatching()
         {
             bool _dirExists = Directory.Exists(PathFolder);
@@ -180,20 +174,11 @@ namespace DirectoryWatch
         {
             FileNotifications.Clear();
         }
-        public void SavePath()
-        {
-            if (File.Exists("watch_list.yml"))
-            {
-                List<YamlNode> _path = YamlNode.FromYamlFile("watch_list.yml").ToList();
-                YamlMapping mapping = (YamlMapping)_path[0];
-                YamlScalar filtersMapping = mapping.First(x => ((YamlScalar)x.Key).Value == "watched").Value as YamlScalar;
-                filtersMapping.Value = PathFolder;
-                _path[0].ToYamlFile("watch_list.yml");
-            }
-        }
         public void SaveFilesInfo()
         {
+            WatchSave watchSave = new WatchSave(PathFolder, Filters);
             YamlSerializer serializer = new YamlSerializer();
+            serializer.SerializeToFile("watch_list.yml", watchSave);
             serializer.SerializeToFile("query.yml", lastQuery);
         }
         private async void dispatcherTimer_Tick(object sender, EventArgs e)
@@ -283,7 +268,6 @@ namespace DirectoryWatch
                     CommandAction = () =>
                     {
                         SaveFilesInfo();
-                        SavePath();
                         Application.Current.Shutdown();
                     }
                 };

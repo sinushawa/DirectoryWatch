@@ -10,12 +10,58 @@ namespace DirectoryWatch
     [Serializable]
     public class FileInfoHolder
     {
-        public string Name;
-        public string Extension;
-        public DateTime LastWriteTime;
+        private string name;
+        public string Name
+        {
+            get
+            {
+                return name;
+            }
+            set
+            {
+                name = value;
+            }
+        }
+        private string fullName;
+        public string FullName
+        {
+            get
+            {
+                return fullName;
+            }
+            set
+            {
+                fullName = value;
+            }
+        }
+        private string extension;
+        public string Extension
+        {
+            get
+            {
+                return extension;
+            }
+            set
+            {
+                extension = value;
+            }
+        }
+        private DateTime lastWriteTime;
+        public DateTime LastWriteTime
+        {
+            get
+            {
+                return lastWriteTime;
+            }
+            set
+            {
+                lastWriteTime = value;
+            }
+        }
 
         public FileInfoHolder(FileInfo _fi)
         {
+            FullName = _fi.FullName;
             Name = _fi.Name;
             Extension = _fi.Extension;
             LastWriteTime = _fi.LastWriteTime;

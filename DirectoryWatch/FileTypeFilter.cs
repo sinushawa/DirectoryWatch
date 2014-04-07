@@ -51,5 +51,8 @@ namespace DirectoryWatch
             isEnabled = _isEnabled;
             extensions = _extensions;
         }
+        public FileTypeFilter()
+        {
+        }
     }
 }

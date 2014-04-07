@@ -58,7 +58,7 @@ namespace DirectoryWatch
         private void onClickOpenElem(object sender, MouseButtonEventArgs e)
         {
             Border ctrl = (Border)sender;
-            ValueDifference<FileInfo> fi = (ValueDifference<FileInfo>)ctrl.DataContext;
+            ValueDifference<FileInfoHolder> fi = (ValueDifference<FileInfoHolder>)ctrl.DataContext;
             string argument = @"/select, " + fi.valueInfo.FullName;
             System.Diagnostics.Process.Start("explorer.exe", argument);
         }

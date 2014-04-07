@@ -66,6 +66,7 @@
     <Compile Include="FileInfoHolderComparer.cs" />
     <Compile Include="FileTypeFilter.cs" />
     <Compile Include="WatchHolder.cs" />
+    <Compile Include="WatchSave.cs" />
     <Page Include="FancyBalloon.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,9 +116,6 @@
     </None>
     <AppDesigner Include="Properties\" />
     <None Include="settings.yml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="watch_list.yml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
